@@ -12,38 +12,38 @@ class LinRegModel:
 
     def fit(self, X_train: np.ndarray, y_train: np.ndarray):
         n = np.size(X_train, axis=1) + 1
-        data_pts = self.append_ones(X_train)
+        data_pts = self.__append_ones(X_train)
         weights = np.random.randn(1, n)
         self.weights = mse_gradient(weights, data_pts, y_train)
 
     def predict(self, X_test):
-        self.check_fit()
-        data_pts = self.append_ones(X_test)
+        self.__check_fit()
+        data_pts = self.__append_ones(X_test)
         preds = []
         for i in range(np.size(data_pts, axis=0)):
             preds.append(np.dot(self.weights, data_pts[i]))
         return preds
 
-    def append_ones(self, data):
-        return np.append(np.ones(shape=(np.size(data, axis=0), 1)), data)
-
     def mse(self, y_test, predictions):
-        self.check_fit()
+        self.__check_fit()
         return mean_squared_error(y_test, predictions)
 
     def r_squared(self, y_test, predictions):
-        self.check_fit()
+        self.__check_fit()
         return r2_score(y_test, predictions)
 
     def coefs(self):
-        self.check_fit()
+        self.__check_fit()
         return self.weights[1:]
 
     def intercept(self):
-        self.check_fit()
+        self.__check_fit()
         return self.weights[0]
 
-    def check_fit(self):
+    def __append_ones(self, data):
+        return np.append(np.ones(shape=(np.size(data, axis=0), 1)), data)
+
+    def __check_fit(self):
         if not self.check_fit():
             raise Exception("Model has not been fit")
 

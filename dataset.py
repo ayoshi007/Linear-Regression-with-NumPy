@@ -1,4 +1,5 @@
 import pandas as pd
+from os.path import exists
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
 from datasetdownload import download_csv
@@ -8,8 +9,10 @@ class PortugueseStudentMathGradesDataSet:
     binary_cats = ['Pstatus', 'address', 'sex', 'famsize', 'schoolsup', 'famsup', 'paid', 'activities', 'nursery',
                    'higher', 'internet', 'romantic']
     nominal_vars = ['guardian', 'reason', 'Mjob', 'Fjob']
+
     def __init__(self, file, url):
-        download_csv(file, url)
+        if not exists(file):
+            download_csv(file, url)
         self.df = pd.read_csv(file, sep=';')
         self.preprocessed = False
 

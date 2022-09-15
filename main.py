@@ -1,5 +1,5 @@
 from dataset import PortugueseStudentMathGradesDataSet
-from linreg_model import gradient_descent, mse_gradient
+from linreg_model import LinRegModel
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 import numpy as np
@@ -9,5 +9,5 @@ dataset = PortugueseStudentMathGradesDataSet('student-mat.csv', 'https://persona
 dataset.preprocess()
 X_train, X_test, y_train, y_test = dataset.get_split()
 
-print(X_train.to_numpy().shape)
-print(y_train.to_numpy().shape)
+model = LinRegModel(learn_rate=0.0001, n_iter=1000, tolerance=1e-06)
+model.fit(X_train, y_train)
