@@ -71,11 +71,7 @@ mse_gradient for feature i is: (1/m)sum(y - ^y) * xi
 need to check/test
 '''
 def mse_gradient(data_pts, targets, weights):
-    # get the predictions for each data point with current weights
-    predictions = np.array([np.dot(i, weights) for i in data_pts])
-    # get the residuals for each data point prediction
-    res = predictions - targets
-    # print(res)
+    # get the residuals for each data point prediction for each data point with current weights
+    res = np.array([np.dot(i, weights) for i in data_pts]) - targets
     # get the gradient by taking the mean of the sum between each data point column and their residual
-    grad = [(column * res).mean() for column in data_pts.transpose()]
-    return grad
+    return [(column * res).mean() for column in data_pts.transpose()]
