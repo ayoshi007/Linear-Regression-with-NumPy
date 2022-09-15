@@ -9,13 +9,14 @@ class LinRegModel:
         self.learn_rate = learn_rate
         self.n_iter = n_iter
         self.tolerance = tolerance
-        self.weights: np.ndarray = None
+        self.weights = None
 
-    def fit(self, X_train: np.ndarray, y_train: np.ndarray):
-        n = np.size(X_train, axis=1) + 1
+    def fit(self, X_train, y_train):
+        X_train, y_train = np.array(X_train), np.array(y_train)
+        weights = np.random.randn(np.size(X_train, axis=1) + 1)
         data_pts = self.__append_ones(X_train)
-        weights = np.random.randn(1, n)
-        self.weights = gradient_descent(mse_gradient, data_pts, y_train, weights, self.learn_rate, self.n_iter, self.tolerance)
+        self.weights = gradient_descent(mse_gradient, data_pts, y_train, weights,
+                                        self.learn_rate, self.n_iter, self.tolerance)
 
     def predict(self, X_test):
         self.__check_fit()
@@ -42,9 +43,9 @@ class LinRegModel:
         return self.weights[0]
 
     def __append_ones(self, data):
-        return np.append(np.ones(shape=(np.size(data, axis=0), 1)), data)
+        return np.insert(data, 0, values=1, axis=1)
 
     def __check_fit(self):
-        if not self.check_fit():
+        if self.weights is None:
             raise Exception("Model has not been fit")
 
