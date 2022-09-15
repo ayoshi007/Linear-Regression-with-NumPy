@@ -20,4 +20,4 @@ intercept = model.intercept()
 coefs = model.coefs()
 
 with open('parameter_log.csv', 'a') as file:
-    file.write(f'{learn_rate},{n_iter},{tolerance},{min_y},{max_y},{mse},{r2_score},{intercept}')
+    file.write(f'{learn_rate},{n_iter},{tolerance},{min_y},{max_y},{mse},{r2_score},{intercept}\n')

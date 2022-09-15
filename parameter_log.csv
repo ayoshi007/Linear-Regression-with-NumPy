@@ -1,1 +1,2 @@
 learn_rate,n_iter,tolerance,min_y,max_y,mse,r2_score,intercept
+1e-07,10000,1e-06,0,20,171.8688134512296,-6.6089470436910265,-0.3366938636648813
