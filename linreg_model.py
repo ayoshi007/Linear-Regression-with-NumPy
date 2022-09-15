@@ -20,11 +20,9 @@ class LinRegModel:
 
     def predict(self, X_test):
         self.__check_fit()
+        X_test = np.array(X_test)
         data_pts = self.__append_ones(X_test)
-        preds = []
-        for i in range(np.size(data_pts, axis=0)):
-            preds.append(np.dot(self.weights, data_pts[i]))
-        return preds
+        return np.array([np.dot(i, self.weights) for i in data_pts])
 
     def mse(self, y_test, predictions):
         self.__check_fit()
