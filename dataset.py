@@ -47,3 +47,8 @@ class PortugueseStudentMathGradesDataSet:
         X = self.df.drop(columns=self.target_var, axis=1)
         y = self.df[self.target_var]
         return train_test_split(X, y, test_size=test_size, random_state=random)
+
+    def get_target_range(self):
+        if not self.preprocessed:
+            raise Exception("Data has not been preprocessed yet")
+        return self.df['G3'].min(), self.df['G3'].max()

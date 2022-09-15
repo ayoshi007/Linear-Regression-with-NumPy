@@ -5,7 +5,7 @@ dataset = PortugueseStudentMathGradesDataSet('student-mat.csv', 'https://persona
 
 dataset.preprocess()
 X_train, X_test, y_train, y_test = dataset.get_split()
-
+min_y, max_y = dataset.get_target_range()
 learn_rate = 0.0000001
 n_iter = 10000
 tolerance = 1e-06
@@ -20,4 +20,4 @@ intercept = model.intercept()
 coefs = model.coefs()
 
 with open('parameter_log.csv', 'a') as file:
-    file.write(f'{learn_rate},{n_iter},{tolerance},{mse},{r2_score},{intercept},{coefs}')
+    file.write(f'{learn_rate},{n_iter},{tolerance},{min_y},{max_y},{mse},{r2_score},{intercept}')
