@@ -51,13 +51,10 @@ class LinRegModel:
 def gradient_descent(gradient, features, targets, start_weights, learn_rate=1, n_iter=1000, tolerance=0.001):
     weights = start_weights
     for i in range(n_iter):
-        print('-------- Iter', i, '--------')
         negative_grad = -learn_rate * np.array(gradient(features, targets, weights))
-        print(negative_grad)
         if np.all(np.abs(negative_grad) <= tolerance):
             break
         weights += negative_grad
-        print('weights:', weights)
     return weights
 
 
