@@ -4,6 +4,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
 from datasetdownload import download_csv
 
+
 class PortugueseStudentMathGradesDataSet:
     target_var = 'G3'
     binary_cats = ['Pstatus', 'address', 'sex', 'famsize', 'schoolsup', 'famsup', 'paid', 'activities', 'nursery',

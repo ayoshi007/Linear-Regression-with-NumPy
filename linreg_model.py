@@ -1,8 +1,7 @@
 import numpy as np
-import pandas as pd
-from sklearn.preprocessing import MinMaxScaler
 from vanillagd import gradient_descent, mse_gradient
 from sklearn.metrics import mean_squared_error, r2_score
+
 
 class LinRegModel:
     def __init__(self, learn_rate, n_iter=1000, tolerance=0.001):

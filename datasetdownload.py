@@ -1,4 +1,3 @@
-from os.path import exists
 import requests
 from requests import HTTPError
 

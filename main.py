@@ -5,6 +5,7 @@ from itertools import product
 import pandas as pd
 
 # fetching data
+print('Fetching data...')
 dataset = PortugueseStudentMathGradesDataSet('student-mat.csv', 'https://personal.utdallas.edu/~afy180000/intro_ml/assignment1/')
 
 # hyperparameters to test
@@ -23,7 +24,8 @@ X_train, X_test, y_train, y_test = dataset.get_split(test_size=test_size)
 file = open('parameter_log_self_coded.csv', 'w')
 file.write('learn_rate,n_iter,tolerance,test_size,min_y,max_y,mse,r2_score,intercept,training_time\n')
 
-print('Evaluating model with various hyperparameters. Please wait...')
+print('Training and evaluating model with various hyperparameters. Please wait...')
+print()
 
 # go through each combination of hyperparameters
 for tolerance, n_iter, learn_rate in product(tolerances, iters, learn_rates):
@@ -43,17 +45,25 @@ for tolerance, n_iter, learn_rate in product(tolerances, iters, learn_rates):
         f'{learn_rate},{n_iter},{tolerance},{test_size},{min_y},{max_y},{mse},{r2_score},{intercept},{training_time}s\n'
     )
 
-
 file.close()
 
-print('Finished iterating through all hyperparameter combinations.'
-      'Finding the best combinations for MSE and R^2 score.')
-tm.sleep(2)
+print('Finished iterating through all hyperparameter combinations.\n'
+      'Finding the highest performing hyperparameters for MSE and R^2 score.')
+tm.sleep(3)
+print()
 
 df = pd.read_csv('parameter_log_self_coded.csv')
-print('The best hyperparameters for MSE:')
-print(df.iloc[df['mse'].argmin()])
-print()
-print('The best hyperparameters for R^2 score:')
-print(df.iloc[df['r2_score'].argmax()])
-print()
+best_mse = df['mse'].argmin()
+best_r2 = df['r2_score'].argmax()
+
+if best_mse == best_r2:
+    print('The highest performing hyperparameters (for both MSE and R^2 score) and their results:')
+    print(df.iloc[best_mse])
+    print()
+else:
+    print('The highest performing hyperparameters for MSE and their results:')
+    print(df.iloc[best_mse])
+    print()
+    print('The highest performing hyperparameters for R^2 score and their results:')
+    print(df.iloc[best_r2])
+    print()
