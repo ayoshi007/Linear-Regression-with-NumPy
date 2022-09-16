@@ -1,13 +1,26 @@
 import numpy as np
-from vanillagd import gradient_descent, mse_gradient
-from sklearn.metrics import mean_squared_error, r2_score
+
+def gradient_descent(gradient, features: np.ndarray, targets: np.ndarray, start_weights: np.ndarray, learn_rate=1, n_iter=1000, tolerance=0.001):
+    weights = start_weights
+    for i in range(n_iter):
+        negative_grad = -learn_rate * np.array(gradient(features, targets, weights))
+        if np.all(np.abs(negative_grad) <= tolerance):
+            break
+        weights += negative_grad
+    return weights
 
 
-class LinRegModel:
-    def __init__(self, learn_rate, n_iter=1000, tolerance=0.001):
-        self.learn_rate = learn_rate
-        self.n_iter = n_iter
-        self.tolerance = tolerance
+def mse_gradient(data_pts: np.ndarray, targets: np.ndarray, weights: np.ndarray) -> list:
+    # get the residuals for each data point prediction for each data point with current weights
+    res = np.array([np.dot(i, weights) for i in data_pts]) - targets
+    # get the gradient by taking the mean of the sum between each data point column and their residual
+    return [(column * res).mean() for column in data_pts.transpose()]
+
+class SelfCodedLinRegModel:
+    def __init__(self, params: dict):
+        self.n_iter = 1000 if 'n_iter' not in params else params['n_iter']
+        self.tolerance = 0.001 if 'tolerance' not in params else params['tolerance']
+        self.learn_rate = 0.0001 if 'learn_rate' not in params else params['learn_rate']
         self.weights = None
 
     def fit(self, X_train, y_train):
@@ -23,14 +36,6 @@ class LinRegModel:
         data_pts = self.__append_ones(X_test)
         return np.array([np.dot(i, self.weights) for i in data_pts])
 
-    def mse(self, y_test, predictions):
-        self.__check_fit()
-        return mean_squared_error(y_test, predictions)
-
-    def r_squared(self, y_test, predictions):
-        self.__check_fit()
-        return r2_score(y_test, predictions)
-
     def coefs(self):
         self.__check_fit()
         return self.weights[1:]
@@ -45,4 +50,3 @@ class LinRegModel:
     def __check_fit(self):
         if self.weights is None:
             raise Exception("Model has not been fit")
-

@@ -2,10 +2,22 @@ import pandas as pd
 from os.path import exists
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
-from datasetdownload import download_csv
+import requests
+from requests import HTTPError
 
 
-class PortugueseStudentMathGradesDataSet:
+def download_csv(file, url):
+    with open(file, 'wb') as f:
+        resp = requests.get(url + file)
+        try:
+            resp.raise_for_status()
+        except HTTPError as e:
+            return False
+        f.write(resp.content)
+    return True
+
+
+class PortugalMathGradesDataSet:
     target_var = 'G3'
     binary_cats = ['Pstatus', 'address', 'sex', 'famsize', 'schoolsup', 'famsup', 'paid', 'activities', 'nursery',
                    'higher', 'internet', 'romantic']
