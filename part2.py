@@ -5,8 +5,8 @@ from itertools import product
 
 learning_rates = ['constant', 'adaptive', 'invscaling', 'optimal']
 eta0s = [0.1, 0.01, 0.001, 0.0001, 0.00001, 0.000001]
-max_iters = [10000, 100000, 1000000, 10000000, 100000000]
-tols = [1e-05, 1e-06, 1e-07, 1e-08, 1e-09, 1e-10]
+max_iters = [1000, 10000, 100000, 1000000]
+tols = [1e-04, 1e-05, 1e-06, 1e-07, 1e-08, 1e-09, 1e-10]
 early_stoppings = [False, True]
 
 
@@ -18,16 +18,16 @@ dataset = PortugalMathGradesDataSet('student-mat.csv', 'https://personal.utdalla
 dataset.preprocess()
 min_y, max_y = dataset.get_target_range()
 test_size = 0.2
-X_train, X_test, y_train, y_test = dataset.get_split(test_size)
+X_train, X_test, y_train, y_test = dataset.get_split(test_size) 
 
-repeats = 3
+repeats = 1
 total = len(learning_rates) * len(eta0s) * len(max_iters) * len(tols) * len(early_stoppings) * repeats
 counter = 1
 
 file = open('parameter_log_library.csv', 'a')
 
 print('Iterating through', total, 'hyperparameter varations...')
-for learning_rate, eta0, max_iter, tol, early_stopping in product(learning_rates, eta0s, max_iters, tols, early_stoppings):
+for max_iter, learning_rate, eta0, tol, early_stopping in product(max_iters, learning_rates, eta0s, tols, early_stoppings):
     hyper_params = {
         'learning_rate': learning_rate,
         'eta0': eta0,
