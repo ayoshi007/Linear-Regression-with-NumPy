@@ -3,9 +3,13 @@ from linreg_model import SelfCodedLinRegModel
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 from itertools import product
 
-learn_rates = [0.1, 0.01, 0.001, 0.0001, 0.00001, 0.000001]
-n_iters = [1000, 10000, 100000, 1000000]
-tolerances = [1e-04, 1e-05, 1e-06, 1e-07, 1e-08, 1e-09, 1e-10]
+# best approximate params from testing:
+# learn_rate = 0.095, n_iter = 25000, tolerance = 1e-08
+filename = 'log_self_coded_final.csv'
+learn_rates = [0.095]
+n_iters = [25000]
+tolerances = [1e-08]
+repeats = 100
 
 # fetching data
 print('Fetching data...')
@@ -15,13 +19,12 @@ dataset = PortugalMathGradesDataSet('student-mat.csv', 'https://personal.utdalla
 dataset.preprocess()
 min_y, max_y = dataset.get_target_range()
 test_size = 0.2
-X_train, X_test, y_train, y_test = dataset.get_split(test_size)
 
-repeats = 1
+
 total = len(learn_rates) * len(n_iters) * len(tolerances) * repeats
 counter = 1
 
-file = open('parameter_log_self_coded.csv', 'a')
+file = open(filename, 'a')
 
 print('Iterating through', total, 'hyperparameter varations...')
 for n_iter, learn_rate, tolerance in product(n_iters, learn_rates, tolerances):
@@ -31,6 +34,7 @@ for n_iter, learn_rate, tolerance in product(n_iters, learn_rates, tolerances):
         'tolerance': tolerance
     }
     for _ in range(repeats):
+        X_train, X_test, y_train, y_test = dataset.get_split(test_size)
         model = SelfCodedLinRegModel(hyper_params)
         model.fit(X_train, y_train)
         preds_train = model.predict(X_train)

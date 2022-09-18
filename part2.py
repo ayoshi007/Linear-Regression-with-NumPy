@@ -3,13 +3,15 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 from sklearn.linear_model import SGDRegressor
 from itertools import product
 
-learning_rates = ['constant', 'adaptive', 'invscaling', 'optimal']
-eta0s = [0.1, 0.01, 0.001, 0.0001, 0.00001, 0.000001]
-max_iters = [1000, 10000, 100000, 1000000]
-tols = [1e-04, 1e-05, 1e-06, 1e-07, 1e-08, 1e-09, 1e-10]
-early_stoppings = [False, True]
-
-
+# best params from testing are:
+# learn_rate = 'adaptive', eta0 = 0.95, max_iter = 15000, tol = 1e-06, early_stopping = False
+filename = 'log_library_final.csv'
+learning_rates = ['adaptive']
+eta0s = [0.9, 0.95, 1.0, 1.05, 1.1]
+max_iters = [10000, 15000, 20000, 25000]
+tols = [1e-06, 1e-07, 1e-08]
+early_stoppings = [False]
+repeats = 20
 # fetching data
 print('Fetching data...')
 dataset = PortugalMathGradesDataSet('student-mat.csv', 'https://personal.utdallas.edu/~afy180000/intro_ml/assignment1/')
@@ -18,13 +20,12 @@ dataset = PortugalMathGradesDataSet('student-mat.csv', 'https://personal.utdalla
 dataset.preprocess()
 min_y, max_y = dataset.get_target_range()
 test_size = 0.2
-X_train, X_test, y_train, y_test = dataset.get_split(test_size) 
 
-repeats = 1
+
 total = len(learning_rates) * len(eta0s) * len(max_iters) * len(tols) * len(early_stoppings) * repeats
 counter = 1
 
-file = open('parameter_log_library.csv', 'a')
+file = open(filename, 'a')
 
 print('Iterating through', total, 'hyperparameter varations...')
 for max_iter, learning_rate, eta0, tol, early_stopping in product(max_iters, learning_rates, eta0s, tols, early_stoppings):
@@ -36,6 +37,7 @@ for max_iter, learning_rate, eta0, tol, early_stopping in product(max_iters, lea
         'early_stopping': early_stopping
     }
     for _ in range(repeats):
+        X_train, X_test, y_train, y_test = dataset.get_split(test_size)
         model = SGDRegressor(learning_rate=hyper_params['learning_rate'],
                              eta0=hyper_params['eta0'],
                              max_iter=hyper_params['max_iter'],
