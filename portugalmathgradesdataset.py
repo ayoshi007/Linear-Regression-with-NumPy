@@ -19,8 +19,8 @@ def download_csv(file, url):
 
 class PortugalMathGradesDataSet:
     target_var = 'G3'
-    binary_cats = ['Pstatus', 'address', 'sex', 'famsize', 'schoolsup', 'famsup', 'paid', 'activities', 'nursery',
-                   'higher', 'internet', 'romantic']
+    binary_cats = ['school', 'Pstatus', 'address', 'sex', 'famsize', 'schoolsup', 'famsup', 'paid',
+                   'activities', 'nursery', 'higher', 'internet', 'romantic']
     nominal_vars = ['guardian', 'reason', 'Mjob', 'Fjob']
 
     def __init__(self, file, url):

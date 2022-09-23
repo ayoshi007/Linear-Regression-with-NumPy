@@ -1,3 +1,9 @@
+from portugalmathgradesdataset import PortugalMathGradesDataSet
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+from linreg_model import SelfCodedLinRegModel
+from itertools import product
+
+
 '''
 part1.py
 
@@ -17,24 +23,19 @@ The user can add/remove values to the learn_rates, n_iters, and tolerances lists
     to add more hyperparameters to test.
 The repeats integer variable is the amount of times each hyperparameter combination is ran.
 
-Please note that the model will crash is learn_rate is set to greater than 0.4
+Please note that this model will crash is learn_rate is set to greater than 0.4
 '''
 
-from portugalmathgradesdataset import PortugalMathGradesDataSet
-from linreg_model import SelfCodedLinRegModel
-from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
-from itertools import product
-
 # output file
-filename = 'self_coded_log.csv'
+filename = 'selfcoded_output1.csv'
 file_columns = 'learn_rate,n_iter,tolerance,min_y,max_y,rmse_train,rmse_test,mse_train,mse_test,mae_train,mae_test,R^2_train,R^2_test,w0,w1,w2,w3,w4,w5,w6,w7,w8,w9,w10,w11,w12,w13,w14,w15\n'
 
 # best approximate params from testing:
-# learn_rate = 0.095, n_iter = 25000, tolerance = 1e-08
-learn_rates: list[float] = [0.4]
-n_iters: list[int] = [25000]
-tolerances: list[float] = [1e-08]
-repeats: int = 1
+# learn_rate = 0.08, n_iter = 5000, tolerance = 4e-06
+learn_rates = [0.08]
+n_iters = [5000]
+tolerances = [4e-06]
+repeats = 1
 
 # fetching dataset
 print('Fetching data...')
@@ -76,15 +77,18 @@ for n_iter, learn_rate, tolerance in product(n_iters, learn_rates, tolerances):
         r2_train = r2_score(y_train, preds_train)
         r2_test = r2_score(y_test, preds_test)
 
-        file.write(f'{hyper_params["learn_rate"]},{hyper_params["n_iter"]},{hyper_params["tolerance"]},'
-                   f'{min_y},{max_y},{mse_train ** 0.5},{mse_test ** 0.5},{mse_train},{mse_test},'
-                   f'{mae_train},{mae_test},{r2_train},{r2_test},')
+        file.write(
+            '{learn_rate},{n_iter},{tolerance},{min_y},{max_y},{rmse_train},{rmse_test},{mse_train},{mse_test},{mae_train},{mae_test},{r2_train},{r2_test},'.format(
+            learn_rate=hyper_params["learn_rate"], n_iter=hyper_params["n_iter"], tolerance=hyper_params["tolerance"],
+            min_y=min_y, max_y=max_y, rmse_train=mse_train ** 0.5, rmse_test=mse_test ** 0.5, mse_train=mse_train, mse_test=mse_test,
+            mae_train=mae_train, mae_test=mae_test, r2_train=r2_train, r2_test=r2_test
+        ))
         for weight in model.weights:
-            file.write(f'{weight}')
+            file.write('{weight}'.format(weight=weight))
             if weight != model.weights[-1]:
                 file.write(',')
         file.write('\n')
-        print(f'Run {counter}/{total}: Recorded in log')
+        print('Run {counter}/{total}: Recorded in log'.format(counter=counter, total=total))
         counter += 1
 
 print('Done')
