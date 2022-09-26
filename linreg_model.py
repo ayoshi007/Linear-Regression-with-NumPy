@@ -1,7 +1,5 @@
 import numpy as np
-<<<<<<< HEAD
 from gradient_descent import gradient_descent, mse_gradient, sgd
-=======
 
 '''
 Please note that this model crashes for learn_rates greater than 0.4
