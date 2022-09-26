@@ -1,8 +1,35 @@
 import numpy as np
+<<<<<<< HEAD
 from gradient_descent import gradient_descent, mse_gradient, sgd
+=======
+
+'''
+Please note that this model crashes for learn_rates greater than 0.4
+'''
+
+def gradient_descent(gradient, features, targets, start_weights, learn_rate=1, n_iter=1000, tolerance=0.001):
+    weights = start_weights
+    for i in range(n_iter):
+        # get gradient 'step'
+        negative_grad = -learn_rate * np.array(gradient(features, targets, weights))
+        # terminate if below tolerance
+        if np.all(np.abs(negative_grad) <= tolerance):
+            break
+        # make gradient 'step'
+        weights += negative_grad
+    # return fitted weights
+    return weights
+
+
+def mse_gradient(data_pts, targets, weights) -> list:
+    # get the residuals for each data point prediction for each data point with current weights
+    res = np.array([np.dot(i, weights) for i in data_pts]) - targets
+    # get the gradient by taking the mean of the sum between each data point column and their residual
+    return [(column * res).mean() for column in data_pts.transpose()]
+>>>>>>> bfa82dc55b0d484963ea2b5280825f6a5d7e533f
 
 class SelfCodedLinRegModel:
-    def __init__(self, params: dict):
+    def __init__(self, params):
         self.n_iter = 1000 if 'n_iter' not in params else params['n_iter']
         self.tolerance = 0.001 if 'tolerance' not in params else params['tolerance']
         self.learn_rate = 0.0001 if 'learn_rate' not in params else params['learn_rate']
