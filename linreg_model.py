@@ -26,7 +26,6 @@ def mse_gradient(data_pts, targets, weights) -> list:
     res = np.array([np.dot(i, weights) for i in data_pts]) - targets
     # get the gradient by taking the mean of the sum between each data point column and their residual
     return [(column * res).mean() for column in data_pts.transpose()]
->>>>>>> bfa82dc55b0d484963ea2b5280825f6a5d7e533f
 
 class SelfCodedLinRegModel:
     def __init__(self, params):
