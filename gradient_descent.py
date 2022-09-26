@@ -1,7 +1,7 @@
 import numpy as np
 import random
 
-def gradient_descent(gradient, features, targets, start_weights, learn_rate=1, n_iter=1000, tolerance=0.001):
+def gradient_descent(gradient, features, targets, start_weights, learn_rate=1, n_iter=1000, tolerance=0.001, batch_size=1):
     weights = start_weights
     for i in range(n_iter):
         # get gradient 'step'
@@ -22,16 +22,16 @@ def mse_gradient(data_pts, targets, weights) -> list:
     return [(column * res).mean() for column in data_pts.transpose()]
 
 
-def sgd(gradient, features, targets, start_weights, learn_rate=1, n_iter=1000, tolerance=0.001, mini_batch=1):
+def sgd(gradient, features, targets, start_weights, learn_rate=1, n_iter=1000, tolerance=0.001, batch_size=1):
     data = np.insert(features, features.shape[1], targets, axis=1)
     np.random.shuffle(data)
     features = data[:, :-1]
     targets = data[:, -1]
     weights = start_weights
     for _ in range(n_iter):
-        i = random.randint(0, targets.size - mini_batch)
-        batch_features = features[i:mini_batch + i]
-        batch_targets = targets[i:mini_batch + i]
+        i = random.randint(0, targets.size - batch_size)
+        batch_features = features[i:batch_size + i]
+        batch_targets = targets[i:batch_size + i]
         negative_grad = -learn_rate * np.array(gradient(batch_features, batch_targets, weights))
         if np.all(np.abs(negative_grad) <= tolerance):
             break

@@ -6,14 +6,17 @@ class SelfCodedLinRegModel:
         self.n_iter = 1000 if 'n_iter' not in params else params['n_iter']
         self.tolerance = 0.001 if 'tolerance' not in params else params['tolerance']
         self.learn_rate = 0.0001 if 'learn_rate' not in params else params['learn_rate']
+        self.gd = gradient_descent if 'gd' not in params else params['gd']
+        self.error_func = mse_gradient if 'error_func' not in params else params['error_func']
+        self.batch_size = 1 if 'batch_size' not in params else params['batch_size']
         self.weights = None
 
     def fit(self, X_train, y_train):
         X_train, y_train = np.array(X_train), np.array(y_train)
         weights = np.random.randn(np.size(X_train, axis=1) + 1)
         data_pts = self.__append_ones(X_train)
-        self.weights = gradient_descent(mse_gradient, data_pts, y_train, weights,
-                                        self.learn_rate, self.n_iter, self.tolerance)
+        self.weights = self.gd(self.error_func, data_pts, y_train, weights,
+                                        self.learn_rate, self.n_iter, self.tolerance, self.batch_size)
 
     def predict(self, X_test):
         self.__check_fit()
